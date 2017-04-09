@@ -36,6 +36,7 @@ class Casting(db.Model):
     duration_remaining = db.Column(db.Integer)
     bounus = db.Column(db.Integer)      # used when its rolled when you cast it
     
+    
 class CastOn(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     casting_id = db.Column(db.Integer, db.ForeignKey('casting.id'))

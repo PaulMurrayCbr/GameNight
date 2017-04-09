@@ -1,25 +1,41 @@
-{% extends "base.html" %} 
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div>
- <h3>New PC</h3>
-  <form action="newpc.do" method="post">
-      {{ newpc_form.hidden_tag() }}
-      <p>
-      	PC: {{ newpc_form.name(size=20) }}
-      	Player: {{ newpc_form.pname(size=20) }}
-      <input type="submit" value="Add"></p>
-  </form>
-  </div>
+	<h2>PCs</h2>
 
- <h3>New BG</h3>
-  <form action="newbg.do" method="post">
-      {{ newbg_form.hidden_tag() }}
-      <p>
-      	BG: {{ newbg_form.name(size=20) }}
-      <input type="submit" value="Add"></p>
-  </form>
-  </div>
+	{% for pc in pcs %}
+	<p>
+		{{pc.name}} ( {{ pc.pname}} ) <a href="pc/{{pc.id}}/delete.do">delete</a>
+	</p>
+	{% endfor %}
+
+	<h3>New PC</h3>
+	<form action="newpc.do" method="post">
+		{{ newpc_form.hidden_tag() }}
+		<p>
+			PC: {{ newpc_form.name(size=20) }} Player: {{
+			newpc_form.pname(size=20) }} <input type="submit" value="Add">
+		</p>
+	</form>
+</div>
+<hr>
+<div>
+	<h2>BGs</h2>
+
+	{% for bg in bgs %}
+	<p>
+		{{bg.name}} <a href="bg/{{bg.id}}/delete.do">delete</a>
+	</p>
+	{% endfor %}
+	
+<h3>New BG</h3>
+<form action="newbg.do" method="post">
+	{{ newbg_form.hidden_tag() }}
+	<p>
+		BG: {{ newbg_form.name(size=20) }} <input type="submit" value="Add">
+	</p>
+</form>
+</div>
 
 
 {% endblock %}
