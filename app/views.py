@@ -1,5 +1,5 @@
 from app import app
-from flask.templating import render_template
+from flask import render_template, flash, redirect
 from forms import NewCharacterForm
 
 @app.route('/')
@@ -19,9 +19,11 @@ def admin():
 
 @app.route('/admin/newpc.do', methods=['POST'])
 def do_newpc():
-    return 'new pc'
+    flash(("New PC", 'success'))
+    return redirect('/admin/')
 
 @app.route('/admin/newbg.do', methods=['POST'])
 def do_newbg():
-    return 'new bg'
+    flash(("New BG",'success'))
+    return redirect('/admin/')
 
