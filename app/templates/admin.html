@@ -1,0 +1,27 @@
+{% extends "base.html" %} 
+{% block content %}
+
+Admin page goes here
+
+<div>
+ <h3>New PC</h3>
+  <form action="newpc.do" method="post">
+      {{ newpc_form.hidden_tag() }}
+      <p>
+      	PC: {{ newpc_form.name(size=20) }}
+      	Player: {{ newpc_form.pname(size=20) }}
+      <input type="submit" value="Add"></p>
+  </form>
+  </div>
+
+ <h3>New BG</h3>
+  <form action="newbg.do" method="post">
+      {{ newbg_form.hidden_tag() }}
+      <p>
+      	BG: {{ newbg_form.name(size=20) }}
+      <input type="submit" value="Add"></p>
+  </form>
+  </div>
+
+
+{% endblock %}

@@ -18,3 +18,5 @@ print("Sqlalchemy migrate repo %s" % SQLALCHEMY_MIGRATE_REPO)
 # finally:
 #     pass
 
+WTF_CSRF_ENABLED = True
+SECRET_KEY = 'Trucker-basin-zorkmid9'

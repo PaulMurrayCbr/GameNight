@@ -2,8 +2,9 @@ from app import db
 
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
+    name = db.Column(db.String(64), unique=True)
     pname = db.Column(db.String(64))
+    pc = db.Column(db.Boolean)
 
     def __repr__(self):
         return '<%r (%r)>' % (self.name), (self.pname)
