@@ -4,14 +4,41 @@ import forms
 import models
 from flask.globals import request
 
+from sqlalchemy.orm.exc import  NoResultFound, MultipleResultsFound
+
+def menugear() :
+	return {
+	    'pcs': models.Character.query.filter_by(pc=True),
+	    'bgs': models.Character.query.filter_by(pc=False)
+	}
+
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title='Home')
+    return render_template('index.html', title='Home', menu=menugear())
 
-@app.route('/character/<name>')
+@app.route('/pc/<name>/')
 def character(name):
-    return "you are looking at the page for %r" % name
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		if pc.pc:
+			updatepc_form=forms.PC(obj=pc)
+		
+			return render_template('pc.html', title='PC',
+						updatepc_form=updatepc_form,
+						pc=pc,
+						menu=menugear())
+		else:
+			flash(('%s is not a PC' % name, 'danger'))
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'))
+		pc = None
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'))
+		pc = None
+
+	return redirect('/')
 
 @app.route('/admin/')
 def admin():
@@ -22,7 +49,8 @@ def admin():
                pcs=pcs,
                bgs=bgs,
                newpc_form=forms.PC(),
-               newbg_form=forms.BG())
+               newbg_form=forms.BG(), 
+               menu=menugear())
 
 @app.route('/admin/newpc.do', methods=['POST'])
 def do_newpc():

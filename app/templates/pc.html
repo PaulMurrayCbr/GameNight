@@ -1,0 +1,21 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<div> 
+	<h1>{{pc.name}}</h1>
+	<form action="updatepc.do" method="post">
+		{{ updatepc_form.hidden_tag() }}
+		<p>
+			PC: {{ updatepc_form.name(size=20) }} Player: {{
+			updatepc_form.pname(size=20) }} <input type="submit" value="Update">
+		</p>
+	</form>
+
+<h2>Favourite Things</h2>
+<h2>Currently Cast By Me</h2>
+<h2>Currently Cast On Me</h2>
+<h2>Current Bonuses</h2>
+
+</div>
+
+{% endblock %}

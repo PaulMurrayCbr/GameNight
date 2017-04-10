@@ -53,12 +53,14 @@
 					aria-expanded="false"> Character <span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li class="dropdown-header">PCs</li>
-						<li><a href="character/Br Warming">Br Warming</a></li>
-						<li><a href="character/Sirocco">Sirocco</a></li>
+						{% for pc in menu.pcs %}
+						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}}</a> ({{pc.pname}})</li>
+						{% endfor %}
+						
 						<li role="separator" class="divider"></li>
-						<li><a href="character/Bad Guys">Bad Guys</a></li>
+						<li><a href="/bgs">Bad Guys</a></li>
 					</ul></li>
-				<li><a href="everyone">Everyone</a></li>
+				<li><a href="/pcs">Everyone</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="/admin">Admin</a></li>
