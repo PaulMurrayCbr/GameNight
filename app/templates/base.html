@@ -54,7 +54,7 @@
 					<ul class="dropdown-menu">
 						<li class="dropdown-header">PCs</li>
 						{% for pc in menu.pcs %}
-						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}}</a> ({{pc.pname}})</li>
+						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}} ({{pc.pname}})</a></li>
 						{% endfor %}
 						
 						<li role="separator" class="divider"></li>
