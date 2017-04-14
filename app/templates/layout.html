@@ -6,9 +6,10 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Game Night - {{ title }}</title>
+<title>Game Night - {% block title %}{% endblock %}</title>
 
 <link rel="shortcut icon" href="/static/d20.ico" />
+{#
 <!-- 
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -25,12 +26,15 @@
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
  -->
+ #}
  
-<link rel="stylesheet"	href="/static/bootstrap.min.css">
-<link rel="stylesheet"	href="/static/bootstrap-theme.min.css">
-<script	src="/static/jquery.min.js"></script>
-<script	src="/static/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/static/GameNight.css">
+<link rel="stylesheet"	href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<link rel="stylesheet"	href="{{ url_for('static', filename='bootstrap-theme.min.css') }}">
+
+<script	src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+<script	src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='GameNight.css') }}">
 
 </head>
 <body>
@@ -80,17 +84,20 @@
 
 	<div class="container gn_body">
 	
-	    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{message[1]}}">{{ message[0] }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+	{% block title_heading %}
+	<h1>{{self.title()}}</h1>
+	{% endblock %}
+	
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<div class="alert alert-{{message[1]}}">{{ message[0] }}</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
 	
 	
-	
-			{% block content %}{% endblock %}
+	{% block content %}{% endblock %}
 	</div>
 </body>
 </html>

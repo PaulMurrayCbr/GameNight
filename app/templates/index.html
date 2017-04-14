@@ -1,4 +1,9 @@
-{% extends "base.html" %} 
+{% extends "/layout.html" %} 
+
+{% block title %}Home{% endblock %}
+{# no heading for jumbotron page #}
+{% block title_heading %}{% endblock %}
+
 {% block content %}
 
 <div class="jumbotron">

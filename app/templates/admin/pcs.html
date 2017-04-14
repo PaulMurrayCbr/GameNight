@@ -1,10 +1,10 @@
-{% extends "/base.html" %} 
+{% extends "/layout.html" %} 
+
+{% block title %}Player Characters{% endblock %}
 
 {% block content %}
 
 <div>
-	<h2>PCs</h2>
-
 	{% for pc in pcs %}
 	<p>
 		{{pc.name}} ( {{ pc.pname}} ) <a href="{{pc.id}}/delete.do">delete</a>

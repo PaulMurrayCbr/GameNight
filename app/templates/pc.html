@@ -1,8 +1,10 @@
-{% extends "base.html" %} 
+{% extends "/layout.html" %} 
+
+{% block title %}{{pc.name}}{% endblock %}
+
 {% block content %}
 
 <div> 
-	<h1>{{pc.name}}</h1>
 	<form action="update.do" method="post">
 		{{ updatepc_form.hidden_tag() }}
 		<p>

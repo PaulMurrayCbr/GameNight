@@ -1,10 +1,10 @@
-{% extends "/base.html" %} 
+{% extends "/layout.html" %} 
+
+{% block title %}Bad Guys{% endblock %}
 
 {% block content %}
 
 <div>
-	<h2>BGs</h2>
-
 	{% for bg in bgs %}
 	<p>
 		{{bg.name}} <a href="{{bg.id}}/delete.do">delete</a>
