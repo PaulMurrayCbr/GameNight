@@ -1,0 +1,24 @@
+{% extends "/base.html" %} 
+
+{% block content %}
+
+<div>
+	<h2>PCs</h2>
+
+	{% for pc in pcs %}
+	<p>
+		{{pc.name}} ( {{ pc.pname}} ) <a href="{{pc.id}}/delete.do">delete</a>
+	</p>
+	{% endfor %}
+
+	<h3>New PC</h3>
+	<form action="newpc.do" method="post">
+		{{ newpc_form.hidden_tag() }}
+		<p>
+			PC: {{ newpc_form.name(size=20) }} Player: {{
+			newpc_form.pname(size=20) }} <input type="submit" value="Add">
+		</p>
+	</form>
+</div>
+
+{% endblock %}

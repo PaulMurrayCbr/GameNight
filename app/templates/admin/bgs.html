@@ -1,0 +1,24 @@
+{% extends "/base.html" %} 
+
+{% block content %}
+
+<div>
+	<h2>BGs</h2>
+
+	{% for bg in bgs %}
+	<p>
+		{{bg.name}} <a href="{{bg.id}}/delete.do">delete</a>
+	</p>
+	{% endfor %}
+	
+<h3>New BG</h3>
+<form action="newbg.do" method="post">
+	{{ newbg_form.hidden_tag() }}
+	<p>
+		BG: {{ newbg_form.name(size=20) }} <input type="submit" value="Add">
+	</p>
+</form>
+</div>
+
+
+{% endblock %}

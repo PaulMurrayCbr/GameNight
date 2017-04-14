@@ -40,19 +40,39 @@ def character(name):
 
 	return redirect('/')
 
-@app.route('/admin/')
-def admin():
-    pcs = models.Character.query.filter_by(pc=True)
-    bgs = models.Character.query.filter_by(pc=False)
 
-    return render_template('admin.html', title='Admin',
+@app.route('/pc/<name>/update.do', methods=['POST'])
+def do_updatepc(name):
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		if pc.pc:
+			updatepc_form=forms.PC(obj=pc)
+		
+			pc.name = updatepc_form.name.data
+			pc.pname = updatepc_form.pname.data
+			db.session.commit()
+		
+			return redirect('/pc/%s' % pc.name)
+		else:
+			flash(('%s is not a PC' % name, 'danger'))
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'))
+		pc = None
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'))
+		pc = None
+
+@app.route('/admin/pc/')
+def adminpc():
+    pcs = models.Character.query.filter_by(pc=True)
+
+    return render_template('/admin/pcs.html', title='Admin PCs',
                pcs=pcs,
-               bgs=bgs,
                newpc_form=forms.PC(),
-               newbg_form=forms.BG(), 
                menu=menugear())
 
-@app.route('/admin/newpc.do', methods=['POST'])
+@app.route('/admin/pc/newpc.do', methods=['POST'])
 def do_newpc():
     form = forms.PC(request.form)
     pc = models.Character(name=form.name.data, pname=form.pname.data, pc=True)
@@ -60,7 +80,7 @@ def do_newpc():
     db.session.commit()
     
     flash(("New PC", 'success'))
-    return redirect('/admin/')
+    return redirect('/admin/pc/')
 
 @app.route('/admin/pc/<id>/delete.do', methods=['GET'])
 def do_deletepc(id):
@@ -74,10 +94,17 @@ def do_deletepc(id):
         db.session.commit()
         flash(("PC '%s' deleted" % pc.name , 'success'))
         
-    return redirect('/admin/')
+    return redirect('/admin/pc/')
 
+@app.route('/admin/bg/')
+def adminbg():
+	bgs = models.Character.query.filter_by(pc=False)
+	return render_template('/admin/bgs.html', title='Admin BGs',
+               bgs=bgs,
+               newbg_form=forms.BG(), 
+               menu=menugear())
 
-@app.route('/admin/newbg.do', methods=['POST'])
+@app.route('/admin/bg/newbg.do', methods=['POST'])
 def do_newbg():
     form = forms.BG(request.form)
     
@@ -86,7 +113,7 @@ def do_newbg():
     db.session.commit()
 
     flash(("New BG", 'success'))
-    return redirect('/admin/')
+    return redirect('/admin/bg/')
 
 @app.route('/admin/bg/<id>/delete.do', methods=['GET'])
 def do_deletebg(id):
@@ -100,5 +127,9 @@ def do_deletebg(id):
         db.session.commit()
         flash(("BG '%s' deleted" % bg.name , 'success'))
         
-    return redirect('/admin/')
+    return redirect('/admin/bg')
 
+@app.route('/admin/bonuses/')
+def admin():
+    return render_template('/admin/bonuses.html', title='Bonus Types',
+               menu=menugear())
