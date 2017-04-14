@@ -15,8 +15,12 @@ def menugear() :
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title='Home', menu=menugear())
+    return render_template('index.html', menu=menugear())
 
+@app.route('/whiteboard')
+def whiteboard():
+    return render_template('whiteboard.html', menu=menugear())
+   
 @app.route('/pc/<name>/')
 def character(name):
 	try:
@@ -24,7 +28,7 @@ def character(name):
 		if pc.pc:
 			updatepc_form=forms.PC(obj=pc)
 		
-			return render_template('pc.html', title='PC',
+			return render_template('pc.html', 
 						updatepc_form=updatepc_form,
 						pc=pc,
 						menu=menugear())
@@ -67,7 +71,7 @@ def do_updatepc(name):
 def adminpc():
     pcs = models.Character.query.filter_by(pc=True)
 
-    return render_template('/admin/pcs.html', title='Admin PCs',
+    return render_template('/admin/pcs.html',
                pcs=pcs,
                newpc_form=forms.PC(),
                menu=menugear())
@@ -99,7 +103,7 @@ def do_deletepc(id):
 @app.route('/admin/bg/')
 def adminbg():
 	bgs = models.Character.query.filter_by(pc=False)
-	return render_template('/admin/bgs.html', title='Admin BGs',
+	return render_template('/admin/bgs.html', 
                bgs=bgs,
                newbg_form=forms.BG(), 
                menu=menugear())
@@ -131,5 +135,5 @@ def do_deletebg(id):
 
 @app.route('/admin/bonuses/')
 def admin():
-    return render_template('/admin/bonuses.html', title='Bonus Types',
+    return render_template('/admin/bonuses.html',
                menu=menugear())
