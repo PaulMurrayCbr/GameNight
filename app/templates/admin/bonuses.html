@@ -5,6 +5,35 @@
 {% block content %}
 
 <div>
+<table class="table">
+	<tr>
+	<th>Name</th>
+	<th>Stacking</th>
+	<th></th>
+	</tr>
+	{% for bt in bts %}
+	<form action="{{bt.form.name.data}}/update.do" method="post">
+		<tr>
+			{{ bt.form.hidden_tag() }}
+			<td>{{ bt.form.name(size=20) }}</td>
+			<td>{{bt.form.stacking() }}</td>
+			<td>
+			<input type="submit" value="Update">
+			<a href="{{bt.id}}/delete.do">Delete</a>
+			</td>
+		</tr>
+	</form>
+	{% endfor %}
+
+	<form action="new.do" method="post">
+		<tr>
+			{{ newbtype_form.hidden_tag() }}
+			<td>{{ newbtype_form.name(size=20) }}</td>
+			<td>{{newbtype_form.stacking() }}</td>
+			<td><input type="submit" value="Create"></td>
+		</tr>
+	</form>
+</table>
 </div>
 
 

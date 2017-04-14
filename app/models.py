@@ -27,7 +27,7 @@ class Buff(db.Model):
 class Effect(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     buff_id = db.Column(db.Integer, db.ForeignKey('buff.id'))
-    type = db.Column(db.String(64))     # morale, sacred, etc
+    bonustype = db.Column(db.String(64))
     target = db.Column(db.String(64))   # ac, to-hit, saves
     bounus = db.Column(db.Integer)      # + whatever
     ablative = db.Column(db.Boolean)
@@ -65,3 +65,10 @@ class CastEffect(db.Model): # only neded when an effect is ablative
     
     def __repr__(self):
         return '<CastEffect %r>' % (self.id)
+    
+# yeah, I'm going to need this.
+class BonusType(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(64), unique=True)
+    stacking = db.Column(db.Boolean)
+    

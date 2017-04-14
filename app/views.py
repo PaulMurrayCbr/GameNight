@@ -83,7 +83,7 @@ def do_newpc():
     db.session.add(pc)
     db.session.commit()
     
-    flash(("New PC", 'success'))
+    flash(("New PC %s" % pc.name, 'success'))
     return redirect('/admin/pc/')
 
 @app.route('/admin/pc/<id>/delete.do', methods=['GET'])
@@ -116,7 +116,7 @@ def do_newbg():
     db.session.add(bg)
     db.session.commit()
 
-    flash(("New BG", 'success'))
+    flash(("New BG %s" % bg.name, 'success'))
     return redirect('/admin/bg/')
 
 @app.route('/admin/bg/<id>/delete.do', methods=['GET'])
@@ -134,6 +134,54 @@ def do_deletebg(id):
     return redirect('/admin/bg')
 
 @app.route('/admin/bonuses/')
-def admin():
-    return render_template('/admin/bonuses.html',
-               menu=menugear())
+def bonuses():
+	bts = [ {'id': bt.id, 'form': forms.BonusType(obj=bt) } for bt in models.BonusType.query.all() ]
+
+	return render_template('/admin/bonuses.html',
+			   bts=bts,
+			   newbtype_form=forms.BonusType(),
+			   menu=menugear())
+
+@app.route('/admin/bonuses/new.do', methods=['POST'])
+def do_new_bonus():
+	form = forms.BonusType(request.form)
+	
+	bt = models.BonusType(name=form.name.data, stacking=form.stacking.data)
+	db.session.add(bt)
+	db.session.commit()
+
+	flash(("New Bonus Type %s" % bt.name, 'success'))
+	return redirect('/admin/bonuses/')
+
+@app.route('/admin/bonuses/<name>/update.do', methods=['POST'])
+def do_update_bonus(name):
+	form = forms.BonusType(request.form)
+	
+	try:
+		bt = models.BonusType.query.filter_by(name=name).one()
+		bt.name = form.name.data
+		bt.stacking = form.stacking.data
+		db.session.commit()
+		
+		flash(("Bonus Type %s updated" % bt.name, 'success'))
+	except MultipleResultsFound, e:
+		flash(('Found multiple bonuses named %s' % name, 'danger'))
+		pc = None
+	except NoResultFound, e:
+		flash(('Bonus type %s not found' % name, 'warning'))
+		pc = None
+
+	
+	return redirect('/admin/bonuses/')
+
+@app.route('/admin/bonuses/<id>/delete.do', methods=['GET'])
+def do_delete_bonus(id):
+	bt = models.BonusType.query.get(id)
+	if not bt:
+		flash(("Bonus Type %s not found" % id , 'danger'))
+	else :
+		db.session.delete(bt)
+		db.session.commit()
+		
+		flash(("Bonus Type %s updated" % bt.name, 'success'))
+	return redirect('/admin/bonuses/')
