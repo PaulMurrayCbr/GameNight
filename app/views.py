@@ -2,6 +2,7 @@ from app import app, db
 from flask import render_template, flash, redirect
 import forms 
 import models
+import compute
 from flask.globals import request
 
 from sqlalchemy.orm.exc import  NoResultFound, MultipleResultsFound
@@ -27,10 +28,18 @@ def character(name):
 		pc = models.Character.query.filter_by(name=name).one()
 		if pc.pc:
 			updatepc_form=forms.PC(obj=pc)
+			
+			add_unsourced_effect_form = forms.AddUnsourcedEffect()
+		
+			add_unsourced_effect_form.bonustype.choices= [ ('','untyped') ] + [
+				(bt.name, bt.name) for bt in models.BonusType.query.all()
+			]
 		
 			return render_template('pc.html', 
 						updatepc_form=updatepc_form,
+						add_unsourced_effect_form = add_unsourced_effect_form,
 						pc=pc,
+						stats = compute.compute_character(pc),
 						menu=menugear())
 		else:
 			flash(('%s is not a PC' % name, 'danger'))
@@ -56,16 +65,40 @@ def do_updatepc(name):
 			pc.pname = updatepc_form.pname.data
 			db.session.commit()
 		
-			return redirect('/pc/%s' % pc.name)
 		else:
 			flash(('%s is not a PC' % name, 'danger'))
 			
 	except MultipleResultsFound, e:
 		flash(('Found multiple characters named %s' % name, 'danger'))
-		pc = None
 	except NoResultFound, e:
 		flash(('PC %s not found' % name, 'warning'))
-		pc = None
+
+	return redirect('/pc/%s/' % pc.name)
+
+@app.route('/pc/<name>/add-unsourced-effect.do', methods=['POST'])
+def pc_add_unsourced_effect(name):
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		if pc.pc:
+			form = forms.AddUnsourcedEffect(request.form)
+
+			effect = models.ActiveEffect()
+			effect.characterid = pc.id
+			effect.bonustype = form.bonustype.data
+			effect.bonusto = form.bonusto.data
+			effect.bonusamt = 2
+			db.session.add(effect)			
+			db.session.commit()
+		
+		else:
+			flash(('%s is not a PC' % name, 'danger'))
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'))
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'))
+	return redirect('/pc/%s/' % pc.name)
+
 
 @app.route('/admin/pc/')
 def adminpc():

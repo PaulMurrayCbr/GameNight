@@ -16,8 +16,33 @@
 <h2>Favourite Things</h2>
 <h2>Currently Cast By Me</h2>
 <h2>Currently Cast On Me</h2>
-<h2>Current Bonuses</h2>
 
+<form action="add-unsourced-effect.do" method="post">
+{{ add_unsourced_effect_form.hidden_tag()}}
+	<p>
+	Add bonus: 
+		{{ add_unsourced_effect_form.bonusamt() }} 
+		{{ add_unsourced_effect_form.bonustype() }} bonus to 
+		{{ add_unsourced_effect_form.bonusto() }} 
+		<input type="submit" value="Add an effect">
+	</p>
+</form>
+
+<h3>Unsourced bonuses</h3>
+
+	{% for us in stats.current.unsourced %}
+		{{us.amt}} {{us.type}} to {{us.to}}{% if not loop.last %}; {% endif %}
+	{% endfor %}
+
+<div style="border: thin solid green; padding: 2; margin: 2 0;">
+{{ stats.current }}
+</div>
+
+<h2>Computed Bonuses</h2>
+
+<div style="border: thin solid green; padding: 2; margin: 2 0;">
+{{ stats.computed }}
+</div>
 </div>
 
 {% endblock %}
