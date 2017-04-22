@@ -1,4 +1,7 @@
 from app import db
+from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
 # no indexes yet
 
@@ -7,6 +10,7 @@ class Character(db.Model):
     abbrev = db.Column(db.String(10), unique=True)
     name = db.Column(db.String(20), unique=True)
     pname = db.Column(db.String(20))
+    hps = relationship("Hp")
 
     def __repr__(self):
         return '<%r (%r)>' % self.name, self.pname
@@ -15,6 +19,8 @@ class Hp(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     character_id = db.Column(db.Integer, db.ForeignKey('character.id'))
+    character = relationship("Character")
+    
     source = db.Column(db.String(20)) # base, temp, stoneskin, con bonus, neg levels, prot acid, damage, nonlethal
     max = db.Column(db.Integer)
     current = db.Column(db.Integer)

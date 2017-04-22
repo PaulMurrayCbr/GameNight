@@ -1,10 +1,18 @@
 import models
 
 def buildInfo(pc):
-    pcinfo = { pc: pc}
+    tmax = 0
+    tcur = 0
     
-    pcinfo['ablative'] = []
-    pcinfo['hp'] = []
-    pcinfo['totalhp'] = (123,456)
+    hps = []
+    abl = []
     
-    return pcinfo
+    for hp in pc.hps:
+        if(hp.ablative_only):
+            abl.append(hp)
+        else:
+            hps.append(hp)
+            tmax += hp.max
+            tcur += hp.current
+            
+    return { 'totalhp' :  (tmax, tcur), 'hps': hps, 'ablative': abl}

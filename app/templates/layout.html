@@ -9,6 +9,10 @@
 <span class="text-danger">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span>
 {% endif %}
 {%- endmacro %}
+{% macro hphp(value) -%}
+{{ hp( (value.current, value.max) ) }}
+{%- endmacro %}
+
 <!DOCTYPE html 
       PUBLIC "-//W3C//DTD HTML 4.01//EN"
       "http://www.w3.org/TR/html4/strict.dtd">

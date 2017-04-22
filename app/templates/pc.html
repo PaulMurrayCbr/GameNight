@@ -80,6 +80,20 @@
 		<button class="btn btn-primary" id="doEditPc">Update</button>
 	</div>
 
+	{% if pcinfo['hps'] %}
+	<div>
+		<strong>Current HP: </strong> {% for h in pcinfo['hps'] %}
+		{{h.source}} {{ hphp(h) }}{% if not loop.last %} ; {% endif %} {%
+		endfor %}
+	</div>
+	{% endif %} {% if pcinfo['ablative'] %}
+	<div>
+		<strong>Other HP: </strong> {% for h in pcinfo['ablative'] %}
+		{{h.source}} {{ hphp(h) }}{% if not loop.last %} ; {% endif %} {%
+		endfor %}
+	</div>
+	{% endif %}
+
 	<div id="SHOWADDHPTYPE" style="display: block;">
 		New HP
 		<button class="btn  btn-sm  btn-default" id="showAddHpType">Add</button>
