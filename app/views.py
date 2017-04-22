@@ -8,8 +8,7 @@ from sqlalchemy.orm.exc import  NoResultFound, MultipleResultsFound
 
 def menugear() :
 	return {
-	    'pcs': models.Character.query.filter_by(pc=True),
-	    'bgs': models.Character.query.filter_by(pc=False)
+	    'pcs': models.Character.query.all()
 	}
 
 @app.route('/')
@@ -25,15 +24,12 @@ def whiteboard():
 def character(name):
 	try:
 		pc = models.Character.query.filter_by(name=name).one()
-		if pc.pc:
-			updatepc_form=forms.PC(obj=pc)
-		
-			return render_template('pc.html', 
-						updatepc_form=updatepc_form,
-						pc=pc,
-						menu=menugear())
-		else:
-			flash(('%s is not a PC' % name, 'danger'))
+		updatepc_form=forms.PC(obj=pc)
+	
+		return render_template('pc.html', 
+					updatepc_form=updatepc_form,
+					pc=pc,
+					menu=menugear())
 			
 	except MultipleResultsFound, e:
 		flash(('Found multiple characters named %s' % name, 'danger'))
@@ -52,6 +48,7 @@ def do_updatepc(name):
 		if pc.pc:
 			updatepc_form=forms.PC(obj=pc)
 		
+			pc.abbrev = updatepc_form.abbrev.data
 			pc.name = updatepc_form.name.data
 			pc.pname = updatepc_form.pname.data
 			db.session.commit()
@@ -69,7 +66,7 @@ def do_updatepc(name):
 
 @app.route('/admin/pc/')
 def adminpc():
-    pcs = models.Character.query.filter_by(pc=True)
+    pcs = models.Character.query.all()
 
     return render_template('/admin/pcs.html',
                pcs=pcs,
@@ -79,7 +76,7 @@ def adminpc():
 @app.route('/admin/pc/newpc.do', methods=['POST'])
 def do_newpc():
     form = forms.PC(request.form)
-    pc = models.Character(name=form.name.data, pname=form.pname.data, pc=True)
+    pc = models.Character(name=form.name.data, pname=form.pname.data, abbrev=form.abbrev.data)
     db.session.add(pc)
     db.session.commit()
     
@@ -100,40 +97,3 @@ def do_deletepc(id):
         
     return redirect('/admin/pc/')
 
-@app.route('/admin/bg/')
-def adminbg():
-	bgs = models.Character.query.filter_by(pc=False)
-	return render_template('/admin/bgs.html', 
-               bgs=bgs,
-               newbg_form=forms.BG(), 
-               menu=menugear())
-
-@app.route('/admin/bg/newbg.do', methods=['POST'])
-def do_newbg():
-    form = forms.BG(request.form)
-    
-    bg = models.Character(name=form.name.data, pc=False)
-    db.session.add(bg)
-    db.session.commit()
-
-    flash(("New BG", 'success'))
-    return redirect('/admin/bg/')
-
-@app.route('/admin/bg/<id>/delete.do', methods=['GET'])
-def do_deletebg(id):
-    bg = models.Character.query.get(id)
-    if not bg:
-        flash(("BG %s not found" % id , 'danger'))
-    elif bg.pc :
-        flash(("'%s' is not a BG" % bg.name , 'danger'))
-    else :
-        db.session.delete(bg)
-        db.session.commit()
-        flash(("BG '%s' deleted" % bg.name , 'success'))
-        
-    return redirect('/admin/bg')
-
-@app.route('/admin/bonuses/')
-def admin():
-    return render_template('/admin/bonuses.html',
-               menu=menugear())

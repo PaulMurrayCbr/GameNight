@@ -60,9 +60,6 @@
 						{% for pc in menu.pcs %}
 						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}} ({{pc.pname}})</a></li>
 						{% endfor %}
-						
-						<li role="separator" class="divider"></li>
-						<li><a href="/bgs">Bad Guys</a></li>
 					</ul></li>
 				<li><a href="/whiteboard">Whiteboard</a></li>
 			</ul>
@@ -72,8 +69,6 @@
 					aria-expanded="false"> Admin <span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a href="/admin/pc">PCs</a></li>
-						<li><a href="/admin/bg">BGs</a></li>
-						<li><a href="/admin/bonuses">Bonus Types</a></li>
 					</ul></li>
 			</ul>
 		</div>
