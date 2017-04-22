@@ -1,22 +1,49 @@
-{% extends "/layout.html" %} 
-
-{% block title %}{{pc.name}}{% endblock %}
+{% extends "/layout.html" %} {% block title %}{{pc.name}}{% endblock %}
 
 {% block content %}
 
-<div> 
-	<form action="update.do" method="post">
-		{{ updatepc_form.hidden_tag() }}
-		<p>
-			PC: {{ updatepc_form.name(size=20) }} Player: {{
-			updatepc_form.pname(size=20) }} <input type="submit" value="Update">
-		</p>
-	</form>
+<script type="text/javascript">
+  $(function() {
+    $("#showEditPc").click(function(e) {
+      e.stopPropagation();
+      $('#SHOWPC').hide();
+      $('#EDITPC').show();
+    });
 
-<h2>Favourite Things</h2>
-<h2>Currently Cast By Me</h2>
-<h2>Currently Cast On Me</h2>
-<h2>Current Bonuses</h2>
+    $("#cancelEditPc").click(function(e) {
+      e.stopPropagation();
+      $('#EDITPC').hide();
+      $('#SHOWPC').show();
+    });
+
+    $("#doEditPc").click(function(e) {
+      e.stopPropagation();
+      $('#EDITPCFORM').submit();
+    });
+  });
+</script>
+
+<div>
+	<h2>Stats</h2>
+	<div id="SHOWPC" style="display: block;">
+		{{pc.name}} (aka: <strong>{{pc.abbrev}}</strong>) - {{pc.pname}}
+		<button class="btn  btn-sm  btn-default" id="showEditPc">Edit</button>
+	</div>
+
+	<div id="EDITPC"  style="display: none;">
+		<form action="update.do" method="post" id="EDITPCFORM">
+			{{ updatepc_form.hidden_tag() }}
+			
+			PC: {{ updatepc_form.name(size=20) }} (aka: {{
+				updatepc_form.abbrev(size=10) }}) - {{ updatepc_form.pname(size=20)
+				}}</p>
+		</form>
+		<button class="btn btn-sm  btn-default" id="cancelEditPc">Cancel</button>
+		<button class="btn btn-sm  btn-primary" id="doEditPc">Update</button>
+	</div>
+
+	<h2>Things I like to do</h2>
+	<h2>Things affecting me</h2>
 
 </div>
 

@@ -29,7 +29,8 @@
  #}
  
 <link rel="stylesheet"	href="{{ url_for('static', filename='bootstrap.min.css') }}">
-<link rel="stylesheet"	href="{{ url_for('static', filename='bootstrap-theme.min.css') }}">
+
+<!--  <link rel="stylesheet"	href="{{ url_for('static', filename='bootstrap-theme.min.css') }}"> -->
 
 <script	src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 <script	src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
@@ -58,7 +59,7 @@
 					<ul class="dropdown-menu">
 						<li class="dropdown-header">PCs</li>
 						{% for pc in menu.pcs %}
-						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}} ({{pc.pname}})</a></li>
+						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}} <small>(aka: {{pc.abbrev}})</small> - {{pc.pname}}</a></li>
 						{% endfor %}
 					</ul></li>
 				<li><a href="/whiteboard">Whiteboard</a></li>

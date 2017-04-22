@@ -45,17 +45,14 @@ def character(name):
 def do_updatepc(name):
 	try:
 		pc = models.Character.query.filter_by(name=name).one()
-		if pc.pc:
-			updatepc_form=forms.PC(obj=pc)
+		updatepc_form=forms.PC(obj=pc)
+	
+		pc.abbrev = updatepc_form.abbrev.data
+		pc.name = updatepc_form.name.data
+		pc.pname = updatepc_form.pname.data
+		db.session.commit()
 		
-			pc.abbrev = updatepc_form.abbrev.data
-			pc.name = updatepc_form.name.data
-			pc.pname = updatepc_form.pname.data
-			db.session.commit()
-		
-			return redirect('/pc/%s' % pc.name)
-		else:
-			flash(('%s is not a PC' % name, 'danger'))
+		return redirect('/pc/%s' % pc.name)
 			
 	except MultipleResultsFound, e:
 		flash(('Found multiple characters named %s' % name, 'danger'))
@@ -88,8 +85,6 @@ def do_deletepc(id):
     pc = models.Character.query.get(id)
     if not pc:
         flash(("PC %s not found" % id , 'danger'))
-    elif not pc.pc :
-        flash(("'%s' is not a PC" % pc.name , 'danger'))
     else :
         db.session.delete(pc)
         db.session.commit()

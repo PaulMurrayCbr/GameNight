@@ -13,14 +13,21 @@ class Character(db.Model):
     
 class Buff(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    # if a buff has a null character id, then it's something that is a general buff
-    # this supports conditions
     
-    character_id = db.Column(db.Integer, db.ForeignKey('character.id'))
+    character_id = db.Column(db.Integer, db.ForeignKey('Character.id'))
     description = db.Column(db.String(1023))
     duration_unit = db.Column(db.String(10))
     duration = db.Column(db.Integer)
+    current_duration = db.Column(db.Integer)
+    supressed = db.Column(db.Boolean())
 
     def __repr__(self):
         return '<Buff#%d %r>' % self.id, self.name
+    
+class BuffOn(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    character_id = db.Column(db.Integer, db.ForeignKey('Character.id'))
+    buff_id = db.Column(db.Integer, db.ForeignKey('Buff.id'))
+    supressed = db.Column(db.Boolean())
+    notes = db.Column(db.String(1023))
     

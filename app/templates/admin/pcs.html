@@ -7,7 +7,7 @@
 <div>
 	{% for pc in pcs %}
 	<p>
-		{{pc.abbrev}}: {{pc.name}} ( {{ pc.pname}} ) <a href="{{pc.id}}/delete.do">delete</a>
+		{{pc.name}} <small>(aka: {{pc.abbrev}})</small> - {{ pc.pname}} <a class="btn btn-sm btn-danger" href="{{pc.id}}/delete.do">delete</a>
 	</p>
 	{% endfor %}
 
@@ -15,9 +15,9 @@
 	<form action="newpc.do" method="post">
 		{{ newpc_form.hidden_tag() }}
 		<p>
-		 {{ newpc_form.abbrev(size=10) }}
-			PC: {{ newpc_form.name(size=20) }} Player: {{
-			newpc_form.pname(size=20) }} <input type="submit" value="Add">
+			PC: {{ newpc_form.name(size=20) }} 
+			<small>aka: {{ newpc_form.abbrev(size=10) }} </small>
+			Player: {{newpc_form.pname(size=20) }} <input class="btn  btn-sm btn-primary" type="submit" value="Add">
 		</p>
 	</form>
 </div>
