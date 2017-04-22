@@ -1,3 +1,14 @@
+{% macro hp(value) -%}
+{% if value[0] == value[1] %}
+<span class="text-primary">{{value[1]}} hp</span>
+{% elif value[0] >= value[1] / 2 %}
+<span class="text-success">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span> hp
+{% elif value[0] > 0 %}
+<span class="text-warning">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span> hp
+{% else %}
+<span class="text-danger">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span> hp
+{% endif %}
+{%- endmacro %}
 <!DOCTYPE html 
       PUBLIC "-//W3C//DTD HTML 4.01//EN"
       "http://www.w3.org/TR/html4/strict.dtd">
@@ -53,15 +64,9 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" role="button" aria-haspopup="true"
-					aria-expanded="false"> Character <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li class="dropdown-header">PCs</li>
-						{% for pc in menu.pcs %}
-						<li><a href="/pc/{{pc.name|urlencode}}">{{pc.name}} <small>(aka: {{pc.abbrev}})</small> - {{pc.pname}}</a></li>
-						{% endfor %}
-					</ul></li>
+				{% for pc in menu.pcs %}
+				<li><a href="/pc/{{pc.name|urlencode}}">{{pc.abbrev}}</a></li>
+				{% endfor %}
 				<li><a href="/whiteboard">Whiteboard</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
