@@ -1,6 +1,6 @@
 {% extends "/layout.html" %} {% block title %}{{pc.name}}{% endblock %}
 {% block title_heading %}
-<h1>{{pc.name}} {{hp(pcinfo.totalhp)}}</h1>
+<h1>{{pc.name}} {{hp(pcinfo.totalhp)}}hp</h1>
 {% endblock %} {% block content %}
 
 <script type="text/javascript">
@@ -57,16 +57,24 @@
 	<div id="EDITPC" style="display: none;">
 		<form action="update.do" method="post" id="EDITPCFORM"
 			class="form-inline" style="display: inline;">
-			<span class="form-group"> {{ updatepc_form.hidden_tag() }} <label
-				for="editpc-name">Name</label> {{ updatepc_form.name(size=20,
-				class_='form-control', id="editpc-name") }} <label
-				for="editpc-abbrev"><small>aka:</small></label> {{
-				updatepc_form.abbrev(size=10, class_='form-control small sm',
-				id="editpc-abbrev") }} <label for="editpc-pname">Player</label> {{
-				updatepc_form.pname(size=20, class_='form-control',
-				id="editpc-pname")}}
-				</p>
-			</span>
+			{{ updatepc_form.hidden_tag() }}
+			<div class="form-group">
+				<div class="input-group">
+					<label for="editpc-name" class="control-label input-group-addon">Name</label>{{
+					updatepc_form.name(size=20, class_='form-control',
+					id="editpc-name") }}
+				</div>
+				<div class="input-group">
+					<label for="editpc-abbrev" class="control-label input-group-addon"><small>aka:</small></label>{{
+					updatepc_form.abbrev(size=10, class_='form-control small sm',
+					id="editpc-abbrev") }}
+				</div>
+				<div class="input-group">
+					<label for="editpc-pname" class="control-label input-group-addon">Player</label>{{
+					updatepc_form.pname(size=20, class_='form-control',
+					id="editpc-pname")}}
+				</div>
+			</div>
 		</form>
 		<button class="btn btn-default" id="cancelEditPc">Cancel</button>
 		<button class="btn btn-primary" id="doEditPc">Update</button>
@@ -79,14 +87,25 @@
 	<div id="EDITADDHPTYPE" style="display: none;">
 		<form action="addhptype.do" method="post" id="ADDHPTYPEFORM"
 			class="form-inline" style="display: inline;">
-			<span class="form-group"> {{ newhp_form.hidden_tag() }} <label
-				for="newhp-source">Source</label> {{ newhp_form.source(size=20,
-				class_='form-control', id="newhp-source") }} <label for="newhp-max">Max</label>
-				{{ newhp_form.max(size=3, class_='form-control', id="newhp-max") }}
-				<label for="newhp-ablative_only">(ablative only)</label> {{
-				newhp_form.ablative_only(class_='form-control',
-				id="newhp-ablative_only") }}
-			</span>
+			{{ newhp_form.hidden_tag() }}
+
+			<div class="form-group">
+				<div class="input-group">
+					<label for="newhp-source" class="control-label input-group-addon">Source</label>{{
+					newhp_form.source(size=20, class_='form-control',
+					id="newhp-source") }}
+				</div>
+				<div class="input-group">
+					<label for="newhp-max" class="control-label input-group-addon">Max</label>{{
+					newhp_form.max(size=3, class_='form-control', id="newhp-max") }}
+				</div>
+				<div class="input-group">
+					<label for="newhp-ablative_only"
+						class="control-label input-group-addon">(ablative only)</label><span
+						class="from-control" id="newhp-ablative_only">{{
+						newhp_form.ablative_only(class_='form-control', ) }}</span>
+				</div>
+			</div>
 		</form>
 		<button class="btn btn-default" id="cancelAddHpType">Cancel</button>
 		<button class="btn btn-primary" id="doAddHpType">Add</button>

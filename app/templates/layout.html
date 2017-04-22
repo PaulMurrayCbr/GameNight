@@ -1,12 +1,12 @@
 {% macro hp(value) -%}
 {% if value[0] == value[1] %}
-<span class="text-primary">{{value[1]}} hp</span>
+<span class="text-primary">{{value[1]}}</span>
 {% elif value[0] >= value[1] / 2 %}
-<span class="text-success">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span> hp
+<span class="text-success">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span>
 {% elif value[0] > 0 %}
-<span class="text-warning">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span> hp
+<span class="text-warning">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span>
 {% else %}
-<span class="text-danger">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span> hp
+<span class="text-danger">{{value[0]}}</span>/<span class="text-primary">{{value[1]}}</span>
 {% endif %}
 {%- endmacro %}
 <!DOCTYPE html 
