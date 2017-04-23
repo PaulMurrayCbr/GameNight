@@ -45,7 +45,46 @@
       $('#ADDHPTYPEFORM').submit();
     });
 
+    $("#showHpBreakdown").click(function(e) {
+      console.log("showHpBreakdown");
+      e.stopPropagation();
+      $('#SHOWHPBREAKDOWN').hide();
+      $('#HPBREAKDOWN').show();
+    });
+
+    $("#hideHpBreakdown").click(function(e) {
+      console.log("hideHpBreakdown");
+      e.stopPropagation();
+      $('#HPBREAKDOWN').hide();
+      $('#SHOWHPBREAKDOWN').show();
+    });
+
   });
+  
+  function clickSetHp(f, hp) {
+    console.log("clickSetHp("+f+", "+hp+")");
+
+    
+  }
+  
+  function clickModifyHp(f, hp) {
+    console.log("clickModifyHp("+f+", "+hp+")");
+    
+    
+  }
+  
+  function clickSetHpMax(f, hp) {
+    console.log("clickSetHpMax("+f+", "+hp+")");
+    
+    
+  }
+
+  function clickZapHp(f, hp) {
+    console.log("clickZapHp("+f+", "+hp+")");
+    
+    
+  }
+
 </script>
 
 <div>
@@ -80,51 +119,134 @@
 		<button class="btn btn-primary" id="doEditPc">Update</button>
 	</div>
 
-	{% if pcinfo['hps'] %}
-	<div>
-		<strong>Current HP: </strong> {% for h in pcinfo['hps'] %}
-		{{h.source}} {{ hphp(h) }}{% if not loop.last %} ; {% endif %} {%
-		endfor %}
+	<div id="SHOWHPBREAKDOWN">
+		<button class="btn btn-sm btn-default" id="showHpBreakdown">Show
+			HP breakdown</button>
 	</div>
-	{% endif %} {% if pcinfo['ablative'] %}
-	<div>
-		<strong>Other HP: </strong> {% for h in pcinfo['ablative'] %}
-		{{h.source}} {{ hphp(h) }}{% if not loop.last %} ; {% endif %} {%
-		endfor %}
-	</div>
-	{% endif %}
+	<div id="HPBREAKDOWN" style="display: none;">
+		<button class="btn btn-sm btn-default" id="hideHpBreakdown">Hide
+			HP breakdown</button>
+		<table class="table">
+			{% if pcinfo['hps'] %}
+			<tr>
+				<th colspan="5">Current HP</th>
+			</tr>
+			{% for h in pcinfo['hps'] %}
+			<tr>
+				<td>{{h.source}} {{ hphp(h) }}</td>
 
-	<div id="SHOWADDHPTYPE" style="display: block;">
-		New HP
-		<button class="btn  btn-sm  btn-default" id="showAddHpType">Add</button>
-	</div>
-	<div id="EDITADDHPTYPE" style="display: none;">
-		<form action="addhptype.do" method="post" id="ADDHPTYPEFORM"
-			class="form-inline" style="display: inline;">
-			{{ newhp_form.hidden_tag() }}
+				<td class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="control-label input-group-addon">Set</label><input
+								style="width: 4em;" type="number" size="3" value="{{h.current}}" /><span
+								class="input-group-addon btn btn-primary"
+								onclick="clickSetHp($(this).parent(),{{h.id}})">Go</span>
+						</div>
+					</div>
+				</td>
+				<td class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="control-label input-group-addon">±</label><input
+								style="width: 4em;" type="number" size="3" value="{{0}}" /><span
+								class="input-group-addon btn btn-primary"
+								onclick="clickModifyHp($(this).parent(),{{h.id}})">Go</span>
+						</div>
+					</div>
+				</td>
+				<td class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="control-label input-group-addon">Set Max</label><input
+								style="width: 4em;" type="number" size="3" value="{{h.max}}" /><span
+								class="input-group-addon btn btn-primary"
+								onclick="clickSetHpMax($(this).parent(),{{h.id}})">Go</span>
+						</div>
+					</div>
 
-			<div class="form-group">
-				<div class="input-group">
-					<label for="newhp-source" class="control-label input-group-addon">Source</label>{{
-					newhp_form.source(size=20, class_='form-control',
-					id="newhp-source") }}
-				</div>
-				<div class="input-group">
-					<label for="newhp-max" class="control-label input-group-addon">Max</label>{{
-					newhp_form.max(size=3, class_='form-control', id="newhp-max") }}
-				</div>
-				<div class="input-group">
-					<label for="newhp-ablative_only"
-						class="control-label input-group-addon">(ablative only)</label><span
-						class="from-control" id="newhp-ablative_only">{{
-						newhp_form.ablative_only(class_='form-control', ) }}</span>
-				</div>
+				</td>
+				<td><span class="btn btn-danger btn-sm"
+					onclick="clickZapHp($(this).parent(),{{h.id}})">Zap!</span></td>
+			</tr>
+			{% endfor %}
 			</div>
-		</form>
-		<button class="btn btn-default" id="cancelAddHpType">Cancel</button>
-		<button class="btn btn-primary" id="doAddHpType">Add</button>
-	</div>
+			{% endif %} {% if pcinfo['ablative'] %}
+			<tr>
+				<th colspan="5">Additional/Ablative HP</th>
+			</tr>
+			{% for h in pcinfo['ablative'] %}
+			<tr>
+				<td>{{h.source}} {{ hphp(h) }}</td>
 
+				<td class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="control-label input-group-addon">Set</label><input
+								style="width: 4em;" type="number" size="3" value="{{h.current}}" /><span
+								class="input-group-addon btn btn-primary"
+								onclick="clickSetHp($(this).parent(),{{h.id}})">Go</span>
+						</div>
+					</div>
+				</td>
+				<td class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="control-label input-group-addon">±</label><input
+								style="width: 4em;" type="number" size="3" value="{{0}}" /><span
+								class="input-group-addon btn btn-primary"
+								onclick="clickModifyHp($(this).parent(),{{h.id}})">Go</span>
+						</div>
+					</div>
+				</td>
+				<td class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="control-label input-group-addon">Set Max</label><input
+								style="width: 4em;" type="number" size="3" value="{{h.max}}" /><span
+								class="input-group-addon btn btn-primary"
+								onclick="clickSetHpMax($(this).parent(),{{h.id}})">Go</span>
+						</div>
+					</div>
+
+				</td>
+				<td><span class="btn btn-danger btn-sm"
+					onclick="clickZapHp($(this).parent(),{{h.id}})">Zap!</span></td>
+			</tr>
+			{% endfor %} {% endif %}
+		</table>
+
+		<div id="SHOWADDHPTYPE" style="display: block;">
+			New HP
+			<button class="btn  btn-sm  btn-default" id="showAddHpType">Add</button>
+		</div>
+		<div id="EDITADDHPTYPE" style="display: none;">
+			<form action="addhptype.do" method="post" id="ADDHPTYPEFORM"
+				class="form-inline" style="display: inline;">
+				{{ newhp_form.hidden_tag() }}
+
+				<div class="form-group">
+					<div class="input-group">
+						<label for="newhp-source" class="control-label input-group-addon">Source</label>{{
+						newhp_form.source(size=20, class_='form-control',
+						id="newhp-source") }}
+					</div>
+					<div class="input-group">
+						<label for="newhp-max" class="control-label input-group-addon">Max</label>{{
+						newhp_form.max(size=3, class_='form-control', id="newhp-max") }}
+					</div>
+					<div class="input-group">
+						<label for="newhp-ablative_only"
+							class="control-label input-group-addon">(ablative only)</label><span
+							class="from-control" id="newhp-ablative_only">{{
+							newhp_form.ablative_only(class_='form-control', ) }}</span>
+					</div>
+				</div>
+			</form>
+			<button class="btn btn-default" id="cancelAddHpType">Cancel</button>
+			<button class="btn btn-primary" id="doAddHpType">Add</button>
+		</div>
+	</div>
 
 	<h2>Things I like to do</h2>
 	<p></p>

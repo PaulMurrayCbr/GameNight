@@ -12,7 +12,7 @@ def buildInfo(pc):
             abl.append(hp)
         else:
             hps.append(hp)
-            tmax += hp.max
-            tcur += hp.current
+            tmax += hp.max if hp.max else 0
+            tcur += hp.current if hp.current else 0
             
     return { 'totalhp' :  (tmax, tcur), 'hps': hps, 'ablative': abl}
