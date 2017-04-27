@@ -15,4 +15,4 @@ def buildInfo(pc):
             tmax += hp.max if hp.max else 0
             tcur += hp.current if hp.current else 0
             
-    return { 'totalhp' :  (tmax, tcur), 'hps': hps, 'ablative': abl}
+    return { 'totalhp' :  (tcur, tmax), 'hps': hps, 'ablative': abl}

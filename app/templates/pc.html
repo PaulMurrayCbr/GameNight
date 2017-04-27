@@ -63,24 +63,31 @@
   
   function clickSetHp(f, hp) {
     console.log("clickSetHp("+f+", "+hp+")");
-
-    
+    var amt = $(f).find("input").first().val();
+	window.location.href = "hp/" + hp + "/set.do?v=" + amt;
   }
   
-  function clickModifyHp(f, hp) {
-    console.log("clickModifyHp("+f+", "+hp+")");
-    
-    
+  function clickAddHp(f, hp) {
+    console.log("clickAddHp("+f+", "+hp+")");
+    var amt = $(f).find("input").first().val();
+    window.location.href = "hp/" + hp + "/add.do?v=" + amt;
+  }
+  
+  function clickSubHp(f, hp) {
+    console.log("clickSubHp("+f+", "+hp+")");
+    var amt = $(f).find("input").first().val();
+    window.location.href ="hp/" + hp + "/add.do?v=" + (-amt);
   }
   
   function clickSetHpMax(f, hp) {
     console.log("clickSetHpMax("+f+", "+hp+")");
-    
-    
+    var amt = $(f).find("input").first().val();
+    window.location.href ="hp/" + hp + "/max.do?v=" + amt;
   }
 
   function clickZapHp(f, hp) {
     console.log("clickZapHp("+f+", "+hp+")");
+	window.location.href = "hp/" + hp + "/zap.do";
     
     
   }
@@ -119,17 +126,21 @@
 		<button class="btn btn-primary" id="doEditPc">Update</button>
 	</div>
 
-	<div id="SHOWHPBREAKDOWN">
+	<div id="SHOWHPBREAKDOWN" style="display: {% if openhpbreakdown %}none{% else %}block{% endif %}">
 		<button class="btn btn-sm btn-default" id="showHpBreakdown">Show
 			HP breakdown</button>
 	</div>
-	<div id="HPBREAKDOWN" style="display: none;">
+	<div id="HPBREAKDOWN" style="display: {% if openhpbreakdown %}block{% else %}none{% endif %};">
 		<button class="btn btn-sm btn-default" id="hideHpBreakdown">Hide
 			HP breakdown</button>
 		<table class="table">
 			{% if pcinfo['hps'] %}
 			<tr>
-				<th colspan="5">Current HP</th>
+				<th>Current HP</th>
+				<th>Set</th>
+				<th>Adjust</th>
+				<th>Max</th>
+				<th>&nbsp;</th>
 			</tr>
 			{% for h in pcinfo['hps'] %}
 			<tr>
@@ -138,8 +149,8 @@
 				<td class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<label class="control-label input-group-addon">Set</label><input
-								style="width: 4em;" type="number" size="3" value="{{h.current}}" /><span
+							<input style="width: 4em;" type="number" size="3"
+								value="{{h.current}}" /><span
 								class="input-group-addon btn btn-primary"
 								onclick="clickSetHp($(this).parent(),{{h.id}})">Go</span>
 						</div>
@@ -148,23 +159,23 @@
 				<td class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<label class="control-label input-group-addon">±</label><input
+							<span class="input-group-addon btn btn-danger"
+								onclick="clickSubHp($(this).parent(),{{h.id}})">-</span><input
 								style="width: 4em;" type="number" size="3" value="{{0}}" /><span
-								class="input-group-addon btn btn-primary"
-								onclick="clickModifyHp($(this).parent(),{{h.id}})">Go</span>
+								class="input-group-addon btn btn-success"
+								onclick="clickAddHp($(this).parent(),{{h.id}})">+</span>
 						</div>
 					</div>
 				</td>
 				<td class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<label class="control-label input-group-addon">Set Max</label><input
-								style="width: 4em;" type="number" size="3" value="{{h.max}}" /><span
+							<input style="width: 4em;" type="number" size="3"
+								value="{{h.max}}" /><span
 								class="input-group-addon btn btn-primary"
 								onclick="clickSetHpMax($(this).parent(),{{h.id}})">Go</span>
 						</div>
 					</div>
-
 				</td>
 				<td><span class="btn btn-danger btn-sm"
 					onclick="clickZapHp($(this).parent(),{{h.id}})">Zap!</span></td>
@@ -173,17 +184,20 @@
 			</div>
 			{% endif %} {% if pcinfo['ablative'] %}
 			<tr>
-				<th colspan="5">Additional/Ablative HP</th>
+				<th>Additional/Ablative HP</th>
+				<th>Set</th>
+				<th>Adjust</th>
+				<th>Max</th>
+				<th>&nbsp;</th>
 			</tr>
 			{% for h in pcinfo['ablative'] %}
 			<tr>
 				<td>{{h.source}} {{ hphp(h) }}</td>
-
 				<td class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<label class="control-label input-group-addon">Set</label><input
-								style="width: 4em;" type="number" size="3" value="{{h.current}}" /><span
+							<input style="width: 4em;" type="number" size="3"
+								value="{{h.current}}" /><span
 								class="input-group-addon btn btn-primary"
 								onclick="clickSetHp($(this).parent(),{{h.id}})">Go</span>
 						</div>
@@ -192,23 +206,23 @@
 				<td class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<label class="control-label input-group-addon">±</label><input
+							<span class="input-group-addon btn btn-danger"
+								onclick="clickSubHp($(this).parent(),{{h.id}})">-</span><input
 								style="width: 4em;" type="number" size="3" value="{{0}}" /><span
-								class="input-group-addon btn btn-primary"
-								onclick="clickModifyHp($(this).parent(),{{h.id}})">Go</span>
+								class="input-group-addon btn btn-success"
+								onclick="clickAddHp($(this).parent(),{{h.id}})">+</span>
 						</div>
 					</div>
 				</td>
 				<td class="form-inline">
 					<div class="form-group">
 						<div class="input-group">
-							<label class="control-label input-group-addon">Set Max</label><input
-								style="width: 4em;" type="number" size="3" value="{{h.max}}" /><span
+							<input style="width: 4em;" type="number" size="3"
+								value="{{h.max}}" /><span
 								class="input-group-addon btn btn-primary"
 								onclick="clickSetHpMax($(this).parent(),{{h.id}})">Go</span>
 						</div>
 					</div>
-
 				</td>
 				<td><span class="btn btn-danger btn-sm"
 					onclick="clickZapHp($(this).parent(),{{h.id}})">Zap!</span></td>

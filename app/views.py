@@ -1,5 +1,5 @@
 from app import app, db
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, get_flashed_messages
 import forms 
 import models
 import Character
@@ -27,19 +27,28 @@ def character(name):
 		pc = models.Character.query.filter_by(name=name).one()
 		updatepc_form=forms.PC(obj=pc)
 		newhp_form=forms.HP()
+		
+		openhpbreakdown = False
+		
+		states = get_flashed_messages(category_filter=['viewstate']) 
+		if states:
+			for state in states:
+				if state['hpopen']:
+					openhpbreakdown = True
 	
 		return render_template('pc.html', 
 					updatepc_form=updatepc_form,
 					newhp_form = newhp_form,
 					pc=pc,
 					pcinfo=Character.buildInfo(pc),
-					menu=menugear())
+					menu=menugear(),
+					openhpbreakdown = openhpbreakdown)
 			
 	except MultipleResultsFound, e:
-		flash(('Found multiple characters named %s' % name, 'danger'))
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
 		pc = None
 	except NoResultFound, e:
-		flash(('PC %s not found' % name, 'warning'))
+		flash(('PC %s not found' % name, 'warning'), 'msg')
 		pc = None
 
 	return redirect('/')
@@ -59,11 +68,13 @@ def do_updatepc(name):
 		return redirect('/pc/%s' % pc.name)
 			
 	except MultipleResultsFound, e:
-		flash(('Found multiple characters named %s' % name, 'danger'))
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
 		pc = None
 	except NoResultFound, e:
-		flash(('PC %s not found' % name, 'warning'))
+		flash(('PC %s not found' % name, 'warning'), 'msg')
 		pc = None
+
+	return redirect('/')
 		
 @app.route('/pc/<name>/addhptype.do', methods=['POST'])
 def do_addhptypepc(name):		
@@ -82,14 +93,160 @@ def do_addhptypepc(name):
 		db.session.add(hp)			
 		db.session.commit()
 		
+		flash({'hpopen':True}, 'viewstate')
 		return redirect('/pc/%s' % pc.name)
 			
 	except MultipleResultsFound, e:
-		flash(('Found multiple characters named %s' % name, 'danger'))
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
 		pc = None
 	except NoResultFound, e:
-		flash(('PC %s not found' % name, 'warning'))
+		flash(('PC %s not found' % name, 'warning'), 'msg')
 		pc = None
+
+	return redirect('/')
+
+@app.route('/pc/<name>/hp/<id>/set.do', methods=['GET', 'POST'])
+def do_sethppc(name, id):
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		hp = models.Hp.query.get(id)
+
+		
+		if not hp:
+			flash(("HP %s not found" % id , 'danger'), 'msg')
+		elif hp.character_id != pc.id:
+			flash(("HP %s belongs to %s" % (id, hp.character.name) , 'danger'), 'msg')
+		else:
+ 			v = request.args.get('v', '')
+ 			if not v or v == '':
+ 				flash(("no new value specified" , 'warning'), 'msg')
+ 			else:
+ 				try:
+ 					v = int(v)
+ 				except ValueError, e:
+ 					flash(("'%s' does not appear to be a number" % v, 'warning'), 'msg')
+ 						
+ 				hp.current = v
+ 				db.session.commit()
+ 				flash(("Set current to %d" % v , 'success'), 'msg')
+		
+		flash({'hpopen':True}, 'viewstate')
+ 		return redirect('/pc/%s' % pc.name)
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
+		pc = None
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'), 'msg')
+		pc = None
+
+	return redirect('/')
+	
+@app.route('/pc/<name>/hp/<id>/max.do', methods=['GET', 'POST'])
+def do_maxhppc(name, id):
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		hp = models.Hp.query.get(id)
+
+		
+		if not hp:
+			flash(("HP %s not found" % id , 'danger'), 'msg')
+		elif hp.character_id != pc.id:
+			flash(("HP %s belongs to %s" % (id, hp.character.name) , 'danger'), 'msg')
+		else:
+ 			v = request.args.get('v', '')
+ 			if not v or v == '':
+ 				flash(("no new value specified" , 'warning'), 'msg')
+ 			else:
+ 				try:
+ 					v = int(v)
+ 				except ValueError, e:
+ 					flash(("'%s' does not appear to be a number" % v, 'warning'), 'msg')
+ 						
+ 				hp.max = v
+ 				db.session.commit()
+ 				flash(("Set max to %d" % v , 'success'), 'msg')
+		
+		flash({'hpopen':True}, 'viewstate')
+ 		return redirect('/pc/%s' % pc.name)
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
+		pc = None
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'), 'msg')
+		pc = None
+
+	return redirect('/')
+
+@app.route('/pc/<name>/hp/<id>/add.do', methods=['GET', 'POST'])
+def do_addhppc(name, id):
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		hp = models.Hp.query.get(id)
+
+		
+		if not hp:
+			flash(("HP %s not found" % id , 'danger'), 'msg')
+		elif hp.character_id != pc.id:
+			flash(("HP %s belongs to %s" % (id, hp.character.name) , 'danger'), 'msg')
+		else:
+ 			v = request.args.get('v', '')
+ 			if not v or v == '':
+ 				flash(("no new value specified" , 'warning'), 'msg')
+ 			else:
+ 				try:
+ 					v = int(v)
+ 				except ValueError, e:
+ 					flash(("'%s' does not appear to be a number" % v, 'warning'), 'msg')
+ 						
+ 				hp.current += v
+ 				db.session.commit()
+ 				if v < 0:
+ 					flash(("Subtracted %d" % -v , 'success'), 'msg')
+				else:
+					flash(("Added %d" % v , 'success'), 'msg')
+		
+		flash({'hpopen':True}, 'viewstate')
+ 		return redirect('/pc/%s' % pc.name)
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
+		pc = None
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'), 'msg')
+		pc = None
+
+	return redirect('/')
+
+@app.route('/pc/<name>/hp/<id>/zap.do', methods=['GET', 'POST'])
+def do_zaphppc(name, id):
+	try:
+		pc = models.Character.query.filter_by(name=name).one()
+		hp = models.Hp.query.get(id)
+
+		
+		if not hp:
+			flash(("HP %s not found" % id , 'danger'), 'msg')
+		elif hp.character_id != pc.id:
+			flash(("HP %s belongs to %s" % (id, hp.character.name) , 'danger'), 'msg')
+		else:
+			db.session.delete(hp)
+			db.session.commit()
+			flash(("Deleted" , 'success'), 'msg')
+		
+		flash({'hpopen':True}, 'viewstate')
+ 		return redirect('/pc/%s' % pc.name)
+			
+	except MultipleResultsFound, e:
+		flash(('Found multiple characters named %s' % name, 'danger'), 'msg')
+		pc = None
+	except NoResultFound, e:
+		flash(('PC %s not found' % name, 'warning'), 'msg')
+		pc = None
+
+	return redirect('/')
+
 
 @app.route('/admin/pc/')
 def adminpc():
@@ -107,18 +264,18 @@ def do_newpc():
     db.session.add(pc)
     db.session.commit()
     
-    flash(("New PC", 'success'))
+    flash(("New PC", 'success'), 'msg')
     return redirect('/admin/pc/')
 
 @app.route('/admin/pc/<id>/delete.do', methods=['GET'])
 def do_deletepc(id):
     pc = models.Character.query.get(id)
     if not pc:
-        flash(("PC %s not found" % id , 'danger'))
+        flash(("PC %s not found" % id , 'danger'), 'msg')
     else :
         db.session.delete(pc)
         db.session.commit()
-        flash(("PC '%s' deleted" % pc.name , 'success'))
+        flash(("PC '%s' deleted" % pc.name , 'success'), 'msg')
         
     return redirect('/admin/pc/')
 
